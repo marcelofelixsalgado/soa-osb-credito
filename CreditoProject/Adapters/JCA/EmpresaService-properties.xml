@@ -1,0 +1,28 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+   <entry key="EMPRESA.NOME_FANTASIA:db_column_not_null">false</entry>
+   <entry key="EMPRESA:db_column_1">RAZAO_SOCIAL</entry>
+   <entry key="EMPRESA.RAZAO_SOCIAL:db_column_type">VARCHAR2</entry>
+   <entry key="EMPRESA:db_column_0">ID</entry>
+   <entry key="EMPRESA.TELEFONE:db_column_not_null">false</entry>
+   <entry key="EMPRESA.RAZAO_SOCIAL:db_column_not_null">false</entry>
+   <entry key="EMPRESA.CNPJ:db_column_not_null">false</entry>
+   <entry key="EMPRESA.CNPJ:db_column_type">VARCHAR2</entry>
+   <entry key="EMPRESA.NOME_FANTASIA:db_column_size">4000</entry>
+   <entry key="EMPRESA.ID:db_column_scale">0</entry>
+   <entry key="EMPRESA.RAZAO_SOCIAL:db_column_size">4000</entry>
+   <entry key="EMPRESA.TELEFONE:db_column_scale">0</entry>
+   <entry key="EMPRESA.ID:db_column_type">NUMBER</entry>
+   <entry key="EMPRESA.TELEFONE:db_column_precision">30</entry>
+   <entry key="EMPRESA.TELEFONE:db_column_type">NUMBER</entry>
+   <entry key="EMPRESA.CNPJ:db_column_size">4000</entry>
+   <entry key="root_descriptor_alias">EMPRESA</entry>
+   <entry key="EMPRESA.ID:db_column_precision">10</entry>
+   <entry key="EMPRESA.ID:db_column_not_null">true</entry>
+   <entry key="EMPRESA:db_table_type">TABLE</entry>
+   <entry key="EMPRESA.NOME_FANTASIA:db_column_type">VARCHAR2</entry>
+   <entry key="EMPRESA:db_column_4">TELEFONE</entry>
+   <entry key="EMPRESA:db_column_3">CNPJ</entry>
+   <entry key="EMPRESA:db_column_2">NOME_FANTASIA</entry>
+</properties>

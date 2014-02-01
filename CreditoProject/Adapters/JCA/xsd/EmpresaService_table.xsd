@@ -1,0 +1,42 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xs:schema targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/db/top/EmpresaService" xmlns="http://xmlns.oracle.com/pcbpel/adapter/db/top/EmpresaService" elementFormDefault="qualified" attributeFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:element name="EmpresaCollection" type="EmpresaCollection"/>
+   <xs:complexType name="EmpresaCollection">
+      <xs:sequence>
+         <xs:element name="Empresa" type="Empresa" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="Empresa">
+      <xs:sequence>
+         <xs:element name="id" type="xs:long" nillable="true"/>
+         <xs:element name="razaoSocial" minOccurs="0" nillable="true">
+            <xs:simpleType>
+               <xs:restriction base="xs:string">
+                  <xs:maxLength value="4000"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:element>
+         <xs:element name="nomeFantasia" minOccurs="0" nillable="true">
+            <xs:simpleType>
+               <xs:restriction base="xs:string">
+                  <xs:maxLength value="4000"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:element>
+         <xs:element name="cnpj" minOccurs="0" nillable="true">
+            <xs:simpleType>
+               <xs:restriction base="xs:string">
+                  <xs:maxLength value="4000"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:element>
+         <xs:element name="telefone" type="xs:decimal" minOccurs="0" nillable="true"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="EmpresaPrimaryKey" type="EmpresaPrimaryKey"/>
+   <xs:complexType name="EmpresaPrimaryKey">
+      <xs:sequence>
+         <xs:element name="id" type="xs:long" minOccurs="1" maxOccurs="1"/>
+      </xs:sequence>
+   </xs:complexType>
+</xs:schema>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpel:process name="VerificaCreditoSJ"
+              targetNamespace="http://www.example.com/flow/CreditoProject/Services/SplitJoins/VerificaCreditoSJ"
+              xmlns:tns="http://www.example.com/flow/CreditoProject/Services/SplitJoins/VerificaCreditoSJ"
+              xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+              xmlns:rescon="http://www.bea.com/alsb/flow/resources/config"
+              xmlns:bea="http://www.bea.com/bpel/ui/extensions"
+              xmlns:ext="http://www.bea.com/bpel/extensions"
+              xmlns:expr="http://www.bea.com/wli/sb/stages/config"
+              xmlns:trf="http://www.bea.com/wli/sb/stages/transform/config"
+              xmlns:bind="http://soaexpert.com.br/EmpresaService/"
+              bea:name="VerificaCreditoSJ" xmlns:ns1="http://soaexpert.com.br/domain" xmlns:ns0="http://soaexpert.com.br/CreditoService/">
+    <bpel:partnerLinks>
+        <bpel:partnerLink name="VerificaCreditoSJ" partnerLinkType="tns:VerificaCreditoSJ"
+                          myRole="VerificaCreditoSJ">
+           </bpel:partnerLink>
+       <bpel:partnerLink name="CreditoServiceBS"
+        partnerLinkType="tns:CreditoServiceBS_plnkType"
+        partnerRole="CreditoServiceBS_PartnerRole">
+       </bpel:partnerLink></bpel:partnerLinks>
+
+       <bpel:variables>
+        <bpel:variable name="request"
+                          messageType="bind:verificaCreditoRequest">
+           </bpel:variable>
+           <bpel:variable name="response"
+                       messageType="bind:verificaCreditoResponse">
+           </bpel:variable>
+    <bpel:variable name="verificaCreditoSerasaResponse"
+        messageType="ns0:verificaCreditoSerasaResponse">
+    </bpel:variable>
+    <bpel:variable name="verificaCreditoSPCResponse"
+        messageType="ns0:verificaCreditoSPCResponse">
+    </bpel:variable>
+    <bpel:variable name="verificaCreditoCasasBahiaResponse"
+        messageType="ns0:verificaCreditoCasasBahiaResponse">
+    </bpel:variable></bpel:variables>
+
+    <bpel:sequence>
+        <bpel:receive partnerLink="VerificaCreditoSJ" operation="verificaCredito" variable="request" createInstance="yes">
+               <rescon:receiveInfo>
+                <rescon:wsdl ref="CreditoProject/Interfaces/WSDL/EmpresaService" binding="bind:EmpresaServiceSOAP"/>
+            </rescon:receiveInfo>
+        </bpel:receive>
+        <bpel:scope>
+            <bpel:variables>
+                <bpel:variable name="empresa" type="ns1:Empresa"></bpel:variable></bpel:variables>
+            <bpel:sequence>
+                <bpel:assign>
+                    <bpel:extensionAssignOperation>
+                        <trf:assign varName="empresa">
+                            <trf:expr>
+                                <expr:xqueryText>$request.parameters/empresa</expr:xqueryText></trf:expr></trf:assign>
+                    </bpel:extensionAssignOperation>
+                </bpel:assign>
+                <bpel:flow>
+                    <bpel:scope>
+                        <bpel:variables>
+                            <bpel:variable
+                                name="verificaCreditoSerasaRequest"
+                                messageType="ns0:verificaCreditoSerasaRequest">
+                            </bpel:variable>
+                            </bpel:variables>
+                        <bpel:sequence>
+                            <bpel:assign>
+                                <bpel:extensionAssignOperation>
+                                    <trf:assign varName="verificaCreditoSerasaRequest.parameters">
+                                        <trf:expr>
+                                            <expr:xqueryText>&lt;cred:verificaCreditoSerasa xmlns:cred=&quot;http://soaexpert.com.br/CreditoService/&quot;&gt;
+    &lt;empresa&gt;
+	{$empresa/*, $empresa/@*}
+    &lt;/empresa&gt;
+&lt;/cred:verificaCreditoSerasa&gt;</expr:xqueryText></trf:expr></trf:assign>
+                                </bpel:extensionAssignOperation>
+                            </bpel:assign>
+                            <bpel:invoke operation="verificaCreditoSerasa" partnerLink="CreditoServiceBS" inputVariable="verificaCreditoSerasaRequest" outputVariable="verificaCreditoSerasaResponse">
+                                <rescon:invokeInfo>
+                                    <rescon:service isProxy="false" ref="CreditoProject/Services/BusinessServices/CreditoServiceBS"></rescon:service></rescon:invokeInfo></bpel:invoke></bpel:sequence>
+                    </bpel:scope>
+                    <bpel:scope>
+                        <bpel:variables>
+                            <bpel:variable
+                                name="verificaCreditoSPCRequest"
+                                messageType="ns0:verificaCreditoSPCRequest">
+                            </bpel:variable></bpel:variables>
+                        <bpel:sequence>
+                            <bpel:assign>
+                                <bpel:extensionAssignOperation>
+                                    <trf:assign varName="verificaCreditoSPCRequest.parameters">
+                                        <trf:expr>
+                                            <expr:xqueryText>&lt;cred:verificaCreditoSPC xmlns:cred=&quot;http://soaexpert.com.br/CreditoService/&quot;&gt;
+    &lt;empresa&gt;
+	{$empresa/*, $empresa/@*}
+    &lt;/empresa&gt;
+&lt;/cred:verificaCreditoSPC&gt;</expr:xqueryText></trf:expr></trf:assign>
+                                </bpel:extensionAssignOperation>
+                            </bpel:assign>
+                            <bpel:invoke operation="verificaCreditoSPC" partnerLink="CreditoServiceBS" inputVariable="verificaCreditoSPCRequest" outputVariable="verificaCreditoSPCResponse">
+                                <rescon:invokeInfo>
+                                    <rescon:service isProxy="false" ref="CreditoProject/Services/BusinessServices/CreditoServiceBS"></rescon:service></rescon:invokeInfo></bpel:invoke></bpel:sequence>
+                    </bpel:scope>
+                <bpel:scope>
+        <bpel:variables>
+            <bpel:variable name="verificaCreditoCasasBahiaRequest"
+                messageType="ns0:verificaCreditoCasasBahiaRequest">
+            </bpel:variable></bpel:variables>
+    <bpel:sequence>
+            <bpel:assign>
+                <bpel:extensionAssignOperation>
+                    <trf:assign varName="verificaCreditoCasasBahiaRequest.parameters">
+                        <trf:expr>
+                            <expr:xqueryText>&lt;cred:verificaCreditoCasasBahia xmlns:cred=&quot;http://soaexpert.com.br/CreditoService/&quot;&gt;
+    &lt;empresa&gt;
+    {$empresa/*, $empresa/@*}
+    &lt;/empresa&gt;
+&lt;/cred:verificaCreditoCasasBahia&gt;</expr:xqueryText></trf:expr></trf:assign>
+                </bpel:extensionAssignOperation>
+            </bpel:assign>
+            <bpel:invoke operation="verificaCreditoCasasBahia" partnerLink="CreditoServiceBS" inputVariable="verificaCreditoCasasBahiaRequest" outputVariable="verificaCreditoCasasBahiaResponse">
+                <rescon:invokeInfo>
+                    <rescon:service isProxy="false" ref="CreditoProject/Services/BusinessServices/CreditoServiceBS"></rescon:service></rescon:invokeInfo></bpel:invoke></bpel:sequence>
+                </bpel:scope></bpel:flow>
+                <bpel:scope>
+                    <bpel:sequence>
+                        <bpel:assign>
+                            <bpel:extensionAssignOperation>
+                                <trf:assign varName="response.parameters">
+                                    <trf:expr>
+                                        <expr:xqueryText>&lt;ns2:verificaCreditoResponse      xmlns:ns3=&quot;http://soaexpert.com.br/domain&quot; xmlns:ns2=&quot;http://soaexpert.com.br/CreditoService/&quot;&gt;
+    &lt;credito&gt;
+    	&lt;empresa&gt;
+    		{$empresa/*}
+    	&lt;/empresa&gt;
+    &lt;ns3:serasa&gt;{data($verificaCreditoSerasaResponse.parameters/credito/ns1:serasa)}&lt;/ns3:serasa&gt;
+    &lt;ns3:spc&gt;{data($verificaCreditoSPCResponse.parameters/credito/ns1:spc)}&lt;/ns3:spc&gt;
+    &lt;ns3:casasBahia&gt;{data($verificaCreditoCasasBahiaResponse.parameters/credito/ns1:casasBahia)}&lt;/ns3:casasBahia&gt;
+    &lt;ns3:aprovado&gt;{
+        xs:boolean($verificaCreditoSerasaResponse.parameters/credito/ns1:serasa)
+        and xs:boolean($verificaCreditoSPCResponse.parameters/credito/ns1:spc)
+        and xs:boolean($verificaCreditoCasasBahiaResponse.parameters/credito/ns1:casasBahia)
+    }       
+    &lt;/ns3:aprovado&gt;
+    &lt;/credito&gt;
+&lt;/ns2:verificaCreditoResponse&gt;</expr:xqueryText></trf:expr></trf:assign>
+                            </bpel:extensionAssignOperation>
+                        </bpel:assign></bpel:sequence>
+                </bpel:scope></bpel:sequence>
+        </bpel:scope>
+        <bpel:reply partnerLink="VerificaCreditoSJ" operation="verificaCredito" variable="response"></bpel:reply>
+    </bpel:sequence>
+</bpel:process>

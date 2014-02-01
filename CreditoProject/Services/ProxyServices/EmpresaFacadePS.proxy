@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml-fragment xmlns:ser="http://www.bea.com/wli/sb/services" xmlns:tran="http://www.bea.com/wli/sb/transports" xmlns:env="http://www.bea.com/wli/config/env" xmlns:http="http://www.bea.com/wli/sb/transports/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:con="http://www.bea.com/wli/sb/pipeline/config" xmlns:con1="http://www.bea.com/wli/sb/stages/routing/config" xmlns:con2="http://www.bea.com/wli/sb/stages/config">
+  <ser:coreEntry isProxy="true" isEnabled="true">
+    <ser:binding type="SOAP" isSoap12="false" xsi:type="con:SoapBindingType" xmlns:con="http://www.bea.com/wli/sb/services/bindings/config">
+      <con:wsdl ref="CreditoProject/Interfaces/WSDL/EmpresaService"/>
+      <con:port>
+        <con:name>EmpresaServiceSOAP</con:name>
+        <con:namespace>http://soaexpert.com.br/EmpresaService/</con:namespace>
+      </con:port>
+      <con:selector type="SOAP body"/>
+    </ser:binding>
+    <ser:monitoring isEnabled="false">
+      <ser:aggregationInterval>10</ser:aggregationInterval>
+      <ser:pipelineMonitoringLevel>Pipeline</ser:pipelineMonitoringLevel>
+    </ser:monitoring>
+    <ser:reporting>true</ser:reporting>
+    <ser:logging isEnabled="true">
+      <ser:logLevel>debug</ser:logLevel>
+    </ser:logging>
+    <ser:sla-alerting isEnabled="true">
+      <ser:alertLevel>normal</ser:alertLevel>
+    </ser:sla-alerting>
+    <ser:pipeline-alerting isEnabled="true">
+      <ser:alertLevel>normal</ser:alertLevel>
+    </ser:pipeline-alerting>
+    <ser:ws-policy>
+      <ser:binding-mode>wsdl-policy-attachments</ser:binding-mode>
+    </ser:ws-policy>
+  </ser:coreEntry>
+  <ser:endpointConfig>
+    <tran:provider-id>http</tran:provider-id>
+    <tran:inbound>true</tran:inbound>
+    <tran:URI>
+      <env:value>/CreditoProject/Services/ProxyServices/EmpresaFacadePS</env:value>
+    </tran:URI>
+    <tran:inbound-properties/>
+    <tran:all-headers>false</tran:all-headers>
+    <tran:provider-specific>
+      <http:inbound-properties/>
+    </tran:provider-specific>
+  </ser:endpointConfig>
+  <ser:router>
+    <con:flow>
+      <con:branch-node type="operation" name="BranchNode1">
+        <con:context/>
+        <con:branch-table>
+          <con:branch name="aprovaEmpresa">
+            <con:operator>equals</con:operator>
+            <con:value/>
+            <con:flow>
+              <con:route-node name="RouteNode1">
+                <con:context/>
+                <con:actions>
+                  <con1:route>
+                    <con2:id>_ActionId-787920604157530217--4b2c12dc.143dab0c5e5.-7f78</con2:id>
+                    <con1:service ref="CreditoProject/Services/ProxyServices/AprovaEmpresaPS" xsi:type="ref:ProxyRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+                    <con1:outboundTransform/>
+                    <con1:responseTransform/>
+                  </con1:route>
+                </con:actions>
+              </con:route-node>
+            </con:flow>
+          </con:branch>
+          <con:branch name="rejeita">
+            <con:operator>equals</con:operator>
+            <con:value/>
+            <con:flow>
+              <con:route-node name="RouteNode2">
+                <con:context/>
+                <con:actions>
+                  <con1:route>
+                    <con2:id>_ActionId-787920604157530217--4b2c12dc.143dab0c5e5.-7f0b</con2:id>
+                    <con1:service ref="CreditoProject/Services/ProxyServices/ReprovaEmpresaPS" xsi:type="ref:ProxyRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+                    <con1:outboundTransform/>
+                    <con1:responseTransform/>
+                  </con1:route>
+                </con:actions>
+              </con:route-node>
+            </con:flow>
+          </con:branch>
+          <con:branch name="cadastra">
+            <con:operator>equals</con:operator>
+            <con:value/>
+            <con:flow>
+              <con:route-node name="RouteNode21">
+                <con:context/>
+                <con:actions>
+                  <con1:route>
+                    <con2:id>_ActionId-787920604157530217--4b2c12dc.143dab0c5e5.-7e9c</con2:id>
+                    <con1:service ref="CreditoProject/Services/ProxyServices/CadastroPS" xsi:type="ref:ProxyRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+                    <con1:outboundTransform/>
+                    <con1:responseTransform/>
+                  </con1:route>
+                </con:actions>
+              </con:route-node>
+            </con:flow>
+          </con:branch>
+          <con:branch name="verificaCredito">
+            <con:operator>equals</con:operator>
+            <con:value/>
+            <con:flow>
+              <con:route-node name="RouteNode22">
+                <con:context/>
+                <con:actions>
+                  <con1:route>
+                    <con2:id>_ActionId-787920604157530217--4b2c12dc.143dab0c5e5.-7e64</con2:id>
+                    <con1:service ref="CreditoProject/Services/BusinessServices/VerificaCreditoSJ" xsi:type="ref:BusinessServiceRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+                    <con1:operation>verificaCredito</con1:operation>
+                    <con1:outboundTransform/>
+                    <con1:responseTransform/>
+                  </con1:route>
+                </con:actions>
+              </con:route-node>
+            </con:flow>
+          </con:branch>
+          <con:branch name="verificaCadastro">
+            <con:operator>equals</con:operator>
+            <con:value/>
+            <con:flow>
+              <con:route-node name="RouteNode221">
+                <con:context/>
+                <con:actions>
+                  <con1:route>
+                    <con2:id>_ActionId-787920604157530217--4b2c12dc.143dab0c5e5.-7df5</con2:id>
+                    <con1:service ref="CreditoProject/Services/ProxyServices/VerificaCadastroPS" xsi:type="ref:ProxyRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+                    <con1:outboundTransform/>
+                    <con1:responseTransform/>
+                  </con1:route>
+                </con:actions>
+              </con:route-node>
+            </con:flow>
+          </con:branch>
+          <con:default-branch>
+            <con:flow/>
+          </con:default-branch>
+        </con:branch-table>
+      </con:branch-node>
+    </con:flow>
+  </ser:router>
+</xml-fragment>

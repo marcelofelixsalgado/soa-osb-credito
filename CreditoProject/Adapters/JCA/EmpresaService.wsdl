@@ -1,0 +1,29 @@
+<?binding.jca EmpresaService_db.jca?>
+<wsdl:definitions name="EmpresaService" targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/db/EmpresaServices/VerificaCadastro/EmpresaService" xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/db/EmpresaServices/VerificaCadastro/EmpresaService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/" xmlns:top="http://xmlns.oracle.com/pcbpel/adapter/db/top/EmpresaService">
+    <plt:partnerLinkType name="EmpresaService_plt">
+        <plt:role name="EmpresaService_role">
+            <plt:portType name="tns:EmpresaService_ptt"/>
+        </plt:role>
+    </plt:partnerLinkType>
+    <wsdl:types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema">
+            <import namespace="http://xmlns.oracle.com/pcbpel/adapter/db/top/EmpresaService" schemaLocation="xsd/EmpresaService_table.xsd"/>
+        </schema>
+    </wsdl:types>
+    <wsdl:message name="EmpresaCollection_msg">
+        <wsdl:part name="EmpresaCollection" element="top:EmpresaCollection"/>
+    </wsdl:message>
+    <wsdl:message name="selectByPrimaryKey_inputParameters">
+        <wsdl:part name="selectByPrimaryKey_inputParameters" element="top:EmpresaPrimaryKey"/>
+    </wsdl:message>
+    <wsdl:portType name="EmpresaService_ptt">
+        <wsdl:operation name="insert">
+            <wsdl:input message="tns:EmpresaCollection_msg"/>
+            <wsdl:output message="tns:EmpresaCollection_msg"/>
+        </wsdl:operation>
+        <wsdl:operation name="selectByPrimaryKey">
+            <wsdl:input message="tns:selectByPrimaryKey_inputParameters"/>
+            <wsdl:output message="tns:EmpresaCollection_msg"/>
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>
