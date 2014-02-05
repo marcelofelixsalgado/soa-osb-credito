@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE MessageFormat SYSTEM 'mfl.dtd'>
+<!--  Enter description of the message format here.  -->
+<MessageFormat name='LoteEmpresa' version='2.02'>
+    <FieldFormat name='id' type='String' delimOptional='y' length='3' strlenInChars='y' codepage='UTF-8'/>
+    <StructFormat name='Empresa' delimOptional='y' repeat='*'>
+        <FieldFormat name='codigo' type='String' delimOptional='y' length='3' strlenInChars='y' codepage='Default'/>
+        <FieldFormat name='nome' type='String' delimOptional='y' length='20' strlenInChars='y' codepage='UTF-8'/>
+        <FieldFormat name='nomeFantasia' type='String' delimOptional='y' length='20' strlenInChars='y' codepage='UTF-8'/>
+        <FieldFormat name='tel' type='String' delimOptional='y' length='10' strlenInChars='y' codepage='UTF-8'/>
+        <FieldFormat name='cnpj' type='String' delimOptional='y' length='18' strlenInChars='y' codepage='UTF-8'/>
+    </StructFormat>
+</MessageFormat>

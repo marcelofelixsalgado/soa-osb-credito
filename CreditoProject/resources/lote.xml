@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LoteEmpresa>
+    <id>1</id>
+    <Empresa>
+        <codigo>1</codigo>
+        <nome>SOA|Expert Edu</nome>
+        <nomeFantasia>SOA|Expert</nomeFantasia>
+        <tel>99996666</tel>
+        <cnpj>12345678</cnpj>
+    </Empresa>
+    <Empresa>
+        <codigo>2</codigo>
+        <nome>GlobalCode inc</nome>
+        <nomeFantasia>Global Code</nomeFantasia>
+        <tel>66669999</tel>
+        <cnpj>987654321</cnpj>
+    </Empresa>
+</LoteEmpresa>
