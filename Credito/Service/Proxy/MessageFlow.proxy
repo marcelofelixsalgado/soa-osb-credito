@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml-fragment xmlns:ser="http://www.bea.com/wli/sb/services" xmlns:tran="http://www.bea.com/wli/sb/transports" xmlns:http="http://www.bea.com/wli/sb/transports/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:env="http://www.bea.com/wli/config/env" xmlns:con="http://www.bea.com/wli/sb/pipeline/config" xmlns:con1="http://www.bea.com/wli/sb/stages/config" xmlns:con2="http://www.bea.com/wli/sb/stages/transform/config" xmlns:con3="http://www.bea.com/wli/sb/stages/routing/config">
+  <ser:coreEntry isProxy="true" isEnabled="true" isAutoPublish="false">
+    <ser:description/>
+    <ser:binding type="SOAP" isSoap12="false" xsi:type="con1:SoapBindingType" xmlns:con1="http://www.bea.com/wli/sb/services/bindings/config">
+      <con1:wsdl ref="Credito/Interface/Contracts/MessageFlowProxy"/>
+      <con1:port>
+        <con1:name>MessageFlowProxySOAP</con1:name>
+        <con1:namespace>http://www.soaexpert.com.br</con1:namespace>
+      </con1:port>
+      <con1:selector type="SOAP body"/>
+      <con1:WSI-compliant>false</con1:WSI-compliant>
+    </ser:binding>
+    <ser:monitoring isEnabled="false">
+      <ser:aggregationInterval>10</ser:aggregationInterval>
+    </ser:monitoring>
+    <ser:reporting>true</ser:reporting>
+    <ser:logging isEnabled="true">
+      <ser:logLevel>debug</ser:logLevel>
+    </ser:logging>
+    <ser:sla-alerting isEnabled="true">
+      <ser:alertLevel>normal</ser:alertLevel>
+    </ser:sla-alerting>
+    <ser:pipeline-alerting isEnabled="true">
+      <ser:alertLevel>normal</ser:alertLevel>
+    </ser:pipeline-alerting>
+    <ser:ws-policy>
+      <ser:binding-mode>wsdl-policy-attachments</ser:binding-mode>
+    </ser:ws-policy>
+  </ser:coreEntry>
+  <ser:endpointConfig>
+    <tran:provider-id>http</tran:provider-id>
+    <tran:inbound>true</tran:inbound>
+    <tran:URI>
+      <env:value>/Credito/Service/Proxy/MessageFlow</env:value>
+    </tran:URI>
+    <tran:inbound-properties/>
+    <tran:all-headers>false</tran:all-headers>
+    <tran:provider-specific>
+      <http:inbound-properties/>
+    </tran:provider-specific>
+  </ser:endpointConfig>
+  <ser:router>
+    <con:pipeline type="request" name="enviaPedido_request">
+      <con:stage name="validate">
+        <con:context/>
+      </con:stage>
+      <con:stage name="Transform">
+        <con:context>
+          <con1:varNsDecl namespace="http://www.soaexpert.com.br" prefix="soa"/>
+          <con1:varNsDecl namespace="http://www.soaexpert.com.br/" prefix="soa1"/>
+        </con:context>
+        <con:actions>
+          <con2:assign varName="getLimiteCreditoRequest">
+            <con1:id>_ActionId-5691143603143502770-729bba08.14409419226.-7ca6</con1:id>
+            <con2:expr>
+              <con1:xqueryText><![CDATA[<soa:getLimiteCredito>
+	<nomeCliente>
+		<soa1:primeiroNome>{$body/soa:enviaPedido/pedido/soa1:Cliente/soa1:Nome_Cliente/soa1:primeiroNome/text()}</soa1:primeiroNome>
+		<soa1:ultimoNome>{$body/soa:enviaPedido/pedido/soa1:Cliente/soa1:Nome_Cliente/soa1:ultimoNome/text()}</soa1:ultimoNome>
+	</nomeCliente>
+</soa:getLimiteCredito>]]></con1:xqueryText>
+            </con2:expr>
+          </con2:assign>
+        </con:actions>
+      </con:stage>
+      <con:stage name="Enrich">
+        <con:context/>
+        <con:actions>
+          <con2:wsCallout>
+            <con1:id>_ActionId-5691143603143502770-729bba08.14409419226.-7c6e</con1:id>
+            <con2:service xsi:type="ref:BusinessServiceRef" ref="Credito/Service/Business/MessageFlow" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+            <con2:operation>getLimiteCredito</con2:operation>
+            <con2:request>
+              <con2:body wrapped="false">$getLimiteCreditoRequest</con2:body>
+            </con2:request>
+            <con2:response>
+              <con2:body wrapped="false">getLimiteCreditoResponse</con2:body>
+            </con2:response>
+            <con2:requestTransform/>
+            <con2:responseTransform/>
+          </con2:wsCallout>
+        </con:actions>
+      </con:stage>
+    </con:pipeline>
+    <con:pipeline type="response" name="enviaPedido_response"/>
+    <con:flow>
+      <con:branch-node type="operation" name="BranchNode1">
+        <con:context/>
+        <con:branch-table>
+          <con:branch name="enviaPedido">
+            <con:operator>equals</con:operator>
+            <con:value/>
+            <con:flow>
+              <con:pipeline-node name="enviaPedido">
+                <con:request>enviaPedido_request</con:request>
+                <con:response>enviaPedido_response</con:response>
+              </con:pipeline-node>
+              <con:branch-node type="condition" name="VerificaCliente">
+                <con:context/>
+                <con:branch-table variable="getLimiteCreditoResponse">
+                  <con:xpath>
+                    <con1:xpathText>//limite/text()</con1:xpathText>
+                  </con:xpath>
+                  <con:branch name="VIP">
+                    <con:operator>greater than</con:operator>
+                    <con:value>500</con:value>
+                    <con:flow>
+                      <con:route-node name="PedidoSelecionado">
+                        <con:context>
+                          <con1:varNsDecl namespace="http://www.soaexpert.com.br" prefix="soa"/>
+                          <con1:varNsDecl namespace="http://www.soaexpert.com.br/" prefix="soa1"/>
+                        </con:context>
+                        <con:actions>
+                          <con3:route>
+                            <con1:id>_ActionId-5691143603143502770-729bba08.14409419226.-7b5f</con1:id>
+                            <con3:service ref="Credito/Service/Business/MessageFlow" xsi:type="ref:BusinessServiceRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+                            <con3:operation>processaPedidoSelecionado</con3:operation>
+                            <con3:outboundTransform>
+                              <con2:replace varName="body" contents-only="true">
+                                <con1:id>_ActionId-5691143603143502770-729bba08.14409419226.-7af0</con1:id>
+                                <con2:location>
+                                  <con1:xpathText>.</con1:xpathText>
+                                </con2:location>
+                                <con2:expr>
+                                  <con1:xqueryText>&lt;soa:processaPedidoSelecionado xmlns:soa="http://www.soaexpert.com.br">
+	{$body/soa:enviaPedido/pedido}
+&lt;/soa:processaPedidoSelecionado></con1:xqueryText>
+                                </con2:expr>
+                              </con2:replace>
+                            </con3:outboundTransform>
+                            <con3:responseTransform/>
+                          </con3:route>
+                        </con:actions>
+                      </con:route-node>
+                    </con:flow>
+                  </con:branch>
+                  <con:default-branch>
+                    <con:flow>
+                      <con:route-node name="PedidoComum">
+                        <con:context/>
+                        <con:actions>
+                          <con3:route>
+                            <con1:id>_ActionId-5691143603143502770-729bba08.14409419226.-7b28</con1:id>
+                            <con3:service ref="Credito/Service/Business/MessageFlow" xsi:type="ref:BusinessServiceRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+                            <con3:operation>processaPedido</con3:operation>
+                            <con3:outboundTransform>
+                              <con2:replace varName="body" contents-only="true">
+                                <con1:id>_ActionId-5691143603143502770-729bba08.14409419226.-7a9c</con1:id>
+                                <con2:location>
+                                  <con1:xpathText>.</con1:xpathText>
+                                </con2:location>
+                                <con2:expr>
+                                  <con1:xqueryText>&lt;soa:processaPedido xmlns:soa="http://www.soaexpert.com.br">
+	{$body/soa:enviaPedido/pedido}
+&lt;/soa:processaPedido></con1:xqueryText>
+                                </con2:expr>
+                              </con2:replace>
+                            </con3:outboundTransform>
+                            <con3:responseTransform/>
+                          </con3:route>
+                        </con:actions>
+                      </con:route-node>
+                    </con:flow>
+                  </con:default-branch>
+                </con:branch-table>
+              </con:branch-node>
+            </con:flow>
+          </con:branch>
+          <con:default-branch>
+            <con:flow/>
+          </con:default-branch>
+        </con:branch-table>
+      </con:branch-node>
+    </con:flow>
+  </ser:router>
+</xml-fragment>

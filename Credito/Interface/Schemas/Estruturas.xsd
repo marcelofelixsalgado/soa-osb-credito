@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.soaexpert.com.br/" xmlns:tns="http://www.soaexpert.com.br/" elementFormDefault="qualified">
+
+    <complexType name="Produto">
+    	<sequence>
+    		<element name="ID_Produto" type="int"></element>
+    		<element name="Nome_Produto" type="string"></element>
+    		<element name="Valor_Produto" type="double"></element>
+    	</sequence>
+    </complexType>
+    
+    <complexType name="CatalogoProduto">
+    	<sequence>
+    		<element name="ID_CatalogoProduto" type="int"></element>
+    		<element name="Produto" type="tns:Produto" maxOccurs="unbounded" minOccurs="1"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="Cliente">
+    	<sequence>
+    		<element name="ID_Cliente" type="string"></element>
+    		<element name="Nome_Cliente" type="tns:Nome" maxOccurs="1" minOccurs="1"></element>
+    	</sequence>
+    </complexType>
+    
+    <complexType name="Nome">
+    	<sequence>
+    		<element name="primeiroNome" type="string"></element>
+    		<element name="ultimoNome" type="string"></element>
+    	</sequence>
+    </complexType>
+    
+    <complexType name="ItemPedido">
+    	<sequence>
+    		<element name="ID_ItemPedido" type="int"></element>
+    		<element name="Produto" type="tns:Produto" maxOccurs="1" minOccurs="1"></element>
+    		<element name="Qtde_ItemPedido" type="int"></element>
+    	</sequence>
+    </complexType>
+    
+    <complexType name="Pedido">
+    	<sequence>
+    		<element name="ID_Pedido" type="int"></element>
+    		<element name="ItemPedido" type="tns:ItemPedido"
+    			maxOccurs="unbounded" minOccurs="1">
+    		</element>
+    		<element name="Cliente" type="tns:Cliente" maxOccurs="1" minOccurs="1"></element>
+    	</sequence>
+    </complexType>
+</schema>

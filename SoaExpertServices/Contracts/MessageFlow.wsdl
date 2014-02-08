@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.soaexpert.com.br" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="MessageFlow" targetNamespace="http://www.soaexpert.com.br">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.soaexpert.com.br"
+    	xmlns:Q1="http://www.soaexpert.com.br/">
+    	<xsd:import schemaLocation="../Schemas/Estruturas.xsd" namespace="http://www.soaexpert.com.br/"></xsd:import>
+    	<xsd:element name="getLimiteCredito">
+    		<xsd:complexType>
+    			<xsd:sequence>
+    				<xsd:element name="nomeCliente" type="Q1:Nome"></xsd:element>
+    			</xsd:sequence>
+    		</xsd:complexType>
+    	</xsd:element>
+    	<xsd:element name="getLimiteCreditoResponse">
+    		<xsd:complexType>
+    			<xsd:sequence>
+    				<xsd:element name="limite" type="xsd:double" />
+    			</xsd:sequence>
+    		</xsd:complexType>
+    	</xsd:element>
+    	<xsd:element name="getCatalogoProduto">
+    		<xsd:complexType>
+    			<xsd:sequence>
+    				<xsd:element name="limite" type="xsd:double"></xsd:element>
+    			</xsd:sequence>
+    		</xsd:complexType>
+    	</xsd:element>
+    	<xsd:element name="getCatalogoProdutoResponse">
+    		<xsd:complexType>
+    			<xsd:sequence>
+    				<xsd:element name="catalogoProduto"
+    					type="Q1:CatalogoProduto">
+    				</xsd:element>
+    			</xsd:sequence>
+    		</xsd:complexType>
+    	</xsd:element>
+    	<xsd:element name="processaPedido">
+    		<xsd:complexType>
+    			<xsd:sequence>
+    				<xsd:element name="pedido" type="Q1:Pedido"></xsd:element>
+    			</xsd:sequence>
+    		</xsd:complexType>
+    	</xsd:element>
+    	<xsd:element name="processaPedidoSelecionado">
+    		<xsd:complexType>
+    			<xsd:sequence>
+    				<xsd:element name="pedido" type="Q1:Pedido"></xsd:element>
+    			</xsd:sequence>
+    		</xsd:complexType>
+    	</xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="getLimiteCreditoRequest">
+    <wsdl:part element="tns:getLimiteCredito" name="getLimiteCreditoRequest"/>
+  </wsdl:message>
+  <wsdl:message name="getLimiteCreditoResponse">
+    <wsdl:part element="tns:getLimiteCreditoResponse" name="getLimiteCreditoResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getCatalogoProdutoRequest">
+  	<wsdl:part name="getCatalogoProdutoRequest" element="tns:getCatalogoProduto"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCatalogoProdutoResponse">
+  	<wsdl:part name="getCatalogoProdutoResponse" element="tns:getCatalogoProdutoResponse"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="processaPedidoRequest">
+  	<wsdl:part name="processaPedidoRequest" element="tns:processaPedido"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="processaPedidoSelecionadoRequest">
+  	<wsdl:part name="parameters" element="tns:processaPedidoSelecionado"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="MessageFlow">
+    <wsdl:operation name="getLimiteCredito">
+      <wsdl:input message="tns:getLimiteCreditoRequest"/>
+      <wsdl:output message="tns:getLimiteCreditoResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="getCatalogoProduto">
+    	<wsdl:input message="tns:getCatalogoProdutoRequest"></wsdl:input>
+    	<wsdl:output message="tns:getCatalogoProdutoResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="processaPedido">
+    	<wsdl:input message="tns:processaPedidoRequest"></wsdl:input>    </wsdl:operation>    <wsdl:operation name="processaPedidoSelecionado">    	<wsdl:input message="tns:processaPedidoSelecionadoRequest"></wsdl:input>    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MessageFlowSOAP" type="tns:MessageFlow">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getLimiteCredito">
+      <soap:operation soapAction="http://www.soaexpert.com.br/SoaExpertServices/getLimiteCredito"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getCatalogoProduto">
+      <soap:operation soapAction="http://www.soaexpert.com.br/SoaExpertServices/getCatalogoProduto"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="processaPedido">
+      <soap:operation soapAction="http://www.soaexpert.com.br/SoaExpertServices/processaPedido"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MessageFlow">
+    <wsdl:port binding="tns:MessageFlowSOAP" name="MessageFlowSOAP">
+      <soap:address location="http://localhost:7001/SoaExpertServices/MessageFluxo"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
