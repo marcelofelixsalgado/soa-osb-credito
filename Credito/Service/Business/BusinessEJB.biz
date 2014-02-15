@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml-fragment xmlns:ser="http://www.bea.com/wli/sb/services" xmlns:tran="http://www.bea.com/wli/sb/transports" xmlns:http="http://www.bea.com/wli/sb/transports/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:env="http://www.bea.com/wli/config/env" xmlns:jejb="http://www.bea.com/wli/sb/transports/jejb">
+  <ser:coreEntry isProxy="false" isEnabled="true">
+    <ser:binding type="SOAP" isSoap12="false" xsi:type="con:SoapBindingType" transport-typed="true" xmlns:con="http://www.bea.com/wli/sb/services/bindings/config">
+      <con:binding>
+        <con:name>JEJBServiceBinding</con:name>
+        <con:namespace>http://www.openuri.org/</con:namespace>
+      </con:binding>
+    </ser:binding>
+    <ser:monitoring isEnabled="false">
+      <ser:aggregationInterval>10</ser:aggregationInterval>
+    </ser:monitoring>
+    <ser:sla-alerting isEnabled="true">
+      <ser:alertLevel>normal</ser:alertLevel>
+    </ser:sla-alerting>
+  </ser:coreEntry>
+  <ser:endpointConfig>
+    <tran:provider-id>jejb</tran:provider-id>
+    <tran:inbound>false</tran:inbound>
+    <tran:URI>
+      <env:value>jejb:EJBJNDI:CalculoEJB#br.com.soaexpert.CalculoEJBRemote</env:value>
+    </tran:URI>
+    <tran:outbound-properties>
+      <tran:load-balancing-algorithm>round-robin</tran:load-balancing-algorithm>
+      <tran:retry-count>0</tran:retry-count>
+      <tran:retry-interval>30</tran:retry-interval>
+      <tran:retry-application-errors>true</tran:retry-application-errors>
+    </tran:outbound-properties>
+    <tran:provider-specific>
+      <jejb:outbound-properties>
+        <jejb:security>
+          <jejb:passClientIdentity>false</jejb:passClientIdentity>
+        </jejb:security>
+      </jejb:outbound-properties>
+      <jejb:ejb-version>3.0</jejb:ejb-version>
+      <jejb:pass-by-value>true</jejb:pass-by-value>
+      <jejb:service>
+        <jejb:clientJar ref="Credito/Resource/calculoEJB"/>
+        <jejb:ejbObject classname="br.com.soaexpert.CalculoEJBRemote">
+          <jejb:method name="somar" signature="int somar(int,int)" exclude="false">
+            <jejb:invocationPoint>somar</jejb:invocationPoint>
+            <jejb:param name="nr1" type="int"/>
+            <jejb:param name="nr2" type="int"/>
+            <jejb:return name="return" type="int"/>
+          </jejb:method>
+        </jejb:ejbObject>
+        <jejb:targetNamespace>http://www.openuri.org/</jejb:targetNamespace>
+      </jejb:service>
+    </tran:provider-specific>
+  </ser:endpointConfig>
+</xml-fragment>

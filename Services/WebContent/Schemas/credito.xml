@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dom:credito xmlns:dom="http://soaexpert.com.br/domain" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://soaexpert.com.br/domain DomainModel.xsd ">
+  <dom:empresa>
+    <dom:id>0</dom:id>
+    <dom:razaoSocial>dom:razaoSocial</dom:razaoSocial>
+    <dom:nomeFantasia>dom:nomeFantasia</dom:nomeFantasia>
+    <dom:cnpj>dom:cnpj</dom:cnpj>
+    <dom:telefone>0</dom:telefone>
+  </dom:empresa>
+  <dom:serasa>true</dom:serasa>
+  <dom:spc>true</dom:spc>
+  <dom:casasBahia>true</dom:casasBahia>
+  <dom:aprovado>true</dom:aprovado>
+</dom:credito>

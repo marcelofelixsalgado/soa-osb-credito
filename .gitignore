@@ -1,2 +1,6 @@
 .metadata
-SoaExpertServices/build/
+Calculo/bin
+CalculoEJB/build
+CalculoEJBClient/build
+Services/build
+SoaExpertServices/build

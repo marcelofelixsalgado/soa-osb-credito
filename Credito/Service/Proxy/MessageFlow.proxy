@@ -42,8 +42,21 @@
   </ser:endpointConfig>
   <ser:router>
     <con:pipeline type="request" name="enviaPedido_request">
-      <con:stage name="validate">
-        <con:context/>
+      <con:stage name="validate" errorHandler="_onErrorHandler-4634176515538441839-5b878001.14422f22598.-7fc8">
+        <con:context>
+          <con1:varNsDecl namespace="http://www.soaexpert.com.br" prefix="soa"/>
+        </con:context>
+        <con:actions>
+          <con2:validate>
+            <con1:id>_ActionId-4634176515538441839-5b878001.14422f22598.-7fc9</con1:id>
+            <con2:wsdl ref="Credito/Interface/Contracts/MessageFlowProxy"/>
+            <con2:schemaElement xmlns:soa="http://www.soaexpert.com.br">soa:enviaPedido</con2:schemaElement>
+            <con2:varName>body</con2:varName>
+            <con2:location>
+              <con1:xpathText>./soa:enviaPedido</con1:xpathText>
+            </con2:location>
+          </con2:validate>
+        </con:actions>
       </con:stage>
       <con:stage name="Transform">
         <con:context>
@@ -84,6 +97,90 @@
       </con:stage>
     </con:pipeline>
     <con:pipeline type="response" name="enviaPedido_response"/>
+    <con:pipeline type="error" name="_onErrorHandler-4634176515538441839-5b878001.14422f22598.-7fc8">
+      <con:stage name="ErroValidacao">
+        <con:context/>
+        <con:actions>
+          <con2:assign varName="fault">
+            <con1:id>_ActionId-4634176515538441839-5b878001.14422f22598.-7f90</con1:id>
+            <con2:expr>
+              <con1:xqueryText><![CDATA[<soap-env:Fault>
+	<faultcode>server</faultcode>
+	<faultstring>Dados de entrada invalidos</faultstring>
+	<detail>
+		{$fault}
+	</detail>
+</soap-env:Fault>]]></con1:xqueryText>
+            </con2:expr>
+          </con2:assign>
+        </con:actions>
+      </con:stage>
+    </con:pipeline>
+    <con:pipeline type="request" name="PipelinePairNode1_request">
+      <con:stage name="validate">
+        <con:context>
+          <con1:varNsDecl namespace="http://www.soaexpert.com.br" prefix="soa"/>
+        </con:context>
+        <con:actions>
+          <con2:validate>
+            <con1:id>_ActionId-1783475325151513720--479b8730.1442d620906.-7f8e</con1:id>
+            <con2:wsdl ref="Credito/Interface/Contracts/MessageFlowProxy"/>
+            <con2:schemaElement xmlns:soa="http://www.soaexpert.com.br">soa:getCatalogoProduto</con2:schemaElement>
+            <con2:varName>body</con2:varName>
+            <con2:location>
+              <con1:xpathText>./soa:getCatalogoProduto</con1:xpathText>
+            </con2:location>
+          </con2:validate>
+        </con:actions>
+      </con:stage>
+      <con:stage name="CalculoJava">
+        <con:context/>
+        <con:actions>
+          <con2:javaCallout varName="resultado">
+            <con1:id>_ActionId-1783475325151513720--479b8730.1442d620906.-7f52</con1:id>
+            <con2:archive ref="Credito/Resource/calculo"/>
+            <con2:className>Calculo</con2:className>
+            <con2:method>public static int somar(int, int)</con2:method>
+            <con2:expr>
+              <con1:xqueryText>1</con1:xqueryText>
+            </con2:expr>
+            <con2:expr>
+              <con1:xqueryText>2</con1:xqueryText>
+            </con2:expr>
+          </con2:javaCallout>
+        </con:actions>
+      </con:stage>
+      <con:stage name="CalculoEJB">
+        <con:context>
+          <con1:varNsDecl namespace="http://www.soaexpert.com.br" prefix="soa"/>
+        </con:context>
+        <con:actions>
+          <con2:assign varName="calculoEJBRequest">
+            <con1:id>_ActionId-1783475325151513720--479b8730.1442d620906.-7c16</con1:id>
+            <con2:expr>
+              <con1:xqueryText><![CDATA[<open:somar xmlns:open="http://www.openuri.org/">
+    <open:nr1>5</open:nr1>
+    <open:nr2>2</open:nr2>
+</open:somar>]]></con1:xqueryText>
+            </con2:expr>
+          </con2:assign>
+          <con2:wsCallout>
+            <con1:id>_ActionId-1783475325151513720--479b8730.1442d620906.-7eab</con1:id>
+            <con2:service xsi:type="ref:BusinessServiceRef" ref="Credito/Service/Business/BusinessEJB" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+            <con2:operation>somar</con2:operation>
+            <con2:request>
+              <con2:body>$calculoEJBRequest</con2:body>
+            </con2:request>
+            <con2:response>
+              <con2:body>calculoEJBResponse</con2:body>
+            </con2:response>
+            <con2:requestTransform/>
+            <con2:responseTransform/>
+          </con2:wsCallout>
+        </con:actions>
+      </con:stage>
+    </con:pipeline>
+    <con:pipeline type="response" name="PipelinePairNode1_response"/>
     <con:flow>
       <con:branch-node type="operation" name="BranchNode1">
         <con:context/>
@@ -165,6 +262,16 @@
                   </con:default-branch>
                 </con:branch-table>
               </con:branch-node>
+            </con:flow>
+          </con:branch>
+          <con:branch name="getCatalogoProduto">
+            <con:operator>equals</con:operator>
+            <con:value/>
+            <con:flow>
+              <con:pipeline-node name="PipelinePairNode1">
+                <con:request>PipelinePairNode1_request</con:request>
+                <con:response>PipelinePairNode1_response</con:response>
+              </con:pipeline-node>
             </con:flow>
           </con:branch>
           <con:default-branch>
