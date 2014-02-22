@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Faults>
+   <Fault>
+      <severity>error</severity>
+      <loc/>
+      <line>87</line>
+      <col/>
+      <file>verifica_cadastro.bpel</file>
+      <name>verifica_cadastro.bpel</name>
+      <fix>Check value of operation ("process") and portType "client:verifica_cadastro".</fix>
+      <msg>No "wsdl:output" message exist on portType "client:verifica_cadastro" with operation "process".</msg>
+   </Fault>
+</Faults>

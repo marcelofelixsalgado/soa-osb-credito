@@ -1,0 +1,85 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Thu Feb 20 21:29:34 BRT 2014
+  Author:  fsoa42
+  Purpose: Synchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="cadastrar"
+               targetNamespace="http://servico.soaexpert.com.br/crm/v1/empresa"
+               xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+               xmlns:client="http://servico.soaexpert.com.br/crm/v1/empresa"
+               xmlns:ora="http://schemas.oracle.com/xpath/extension"
+               xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+               xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:ns1="http://soaexpert.com.br/EmpresaService/"
+         xmlns:ns2="http://soaexpert.com.br/domain">
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      PARTNERLINKS                                                      
+      List of services participating in this BPEL process               
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  --> 
+  <partnerLinks>
+    <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+    <partnerLink name="cadastrar_client" partnerLinkType="client:cadastrar" myRole="cadastrarProvider"/>
+    <partnerLink name="EmpresaESB" partnerLinkType="ns1:EmpresaService_PL"
+                 partnerRole="EmpresaService_Role"/>
+  </partnerLinks>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES                                                        
+      List of messages and XML documents used within this BPEL process 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <variables>
+    <!-- Reference to the message passed as input during initiation -->
+    <variable name="inputVariable" messageType="client:requestMessage"/>
+
+    <!-- Reference to the message that will be returned to the requester-->
+    <variable name="outputVariable" messageType="client:replyMessage"/>
+    <variable name="cadastra_InputVariable" messageType="ns1:cadastraRequest"/>
+    <variable name="cadastra_OutputVariable"
+              messageType="ns1:cadastraResponse"/>
+  </variables>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC                                               
+     Set of activities coordinating the flow of messages across the    
+     services integrated within this business process                  
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <sequence name="main">
+
+    <!-- Receive input from requestor. (Note: This maps to operation defined in cadastrar.wsdl) -->
+    <receive name="receiveInput" partnerLink="cadastrar_client" portType="client:empresa_ptt" operation="cadastrar" variable="inputVariable" createInstance="yes"/>
+    <assign name="trfCadastraRequest">
+      <copy>
+        <from>$inputVariable.empresa</from>
+        <to>$cadastra_InputVariable.parameters/empresa</to>
+      </copy>
+    </assign>
+    <invoke name="InvokeCadastra"
+            partnerLink="EmpresaESB" portType="ns1:EmpresaService"
+            operation="cadastra" inputVariable="cadastra_InputVariable"
+            outputVariable="cadastra_OutputVariable" bpelx:invokeAsDetail="no"/>
+    <assign name="trfCadastraResponse">
+      <copy>
+        <from>$cadastra_OutputVariable.parameters/empresa</from>
+        <to>$outputVariable.empresa</to>
+      </copy>
+    </assign>
+    <!-- Generate reply to synchronous request -->
+    <reply name="replyOutput" partnerLink="cadastrar_client" portType="client:empresa_ptt" operation="cadastrar" variable="outputVariable"/>
+  </sequence>
+</process>
