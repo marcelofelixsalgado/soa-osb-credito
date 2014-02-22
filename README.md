@@ -13,7 +13,9 @@ Ferramentas utilizadas:
 - Eclipse OEPE - Release 3.7.0 (Indigo) (oepe-indigo-all-in-one-11.1.1.8.0.201110211138-linux-gtk-x86_64.zip)
 - JDeveloper 11g release 1 (11.1.1.7.0) (jdevstudio11117install.jar)
 - Oracle WebLogic Server 11gR1 (10.3.6) (wls1036_generic.zip)
-- Oracle XE 11.2.0 (oracle-xe-11.2.0-1.0.x86_64.rpm.zip)
+- Oracle XE 11.2.0 (oracle-xe-11.2.0-1.0.x86_64.rpm.zip
+- RCU (ofm_rcu_linux_11.1.1.7.0_64_disk1_1of1.zip)
+- Oracle SOA Suite 11.1.1.7.0 (ofm_soa_generic_11.1.1.7.0_disk1_1of2.zip e ofm_soa_generic_11.1.1.7.0_disk1_2of2.zip)
 
 Roteiro de configuração do ambiente:
 ------------------------------------
@@ -92,3 +94,72 @@ Roteiro de configuração do ambiente:
 		- JNDI Name = ReprovaEmpresaQueue
 	- next
 	- no campo "Subdeployments" selecionar "SoaExpertSub" - Finish
+
+
+--------------------------------------------------------------------------------------
+
+INSTALACAO DO ORACLE SOA SUITE
+---------- -- ------ --- -----
+Link para download:
+http://www.oracle.com/technetwork/middleware/soasuite/downloads/index.html
+
+Seguir documento de instalação
+http://bit.ly/soasuitequickstartguide
+ou
+./docs/quickstartguidesoasuite11gr1ps4-459545.pdf
+
+
+1 - Instalar o Oracle SOA Suite
+Juntar os dois pacotes em uma pasta só e rodar o runInstaller da pasta disk1.
+
+2 - Instalar o RCU
+Importante: precisa setar isso na instalação do RCU!!
+set RCU_JDBC_TRIM_BLOCKS=TRUE
+echo %RCU_JDBC_TRIM_BLOCKS%
+
+O RCU cria uma estrutura de tabelas que os produtos da Oracle vão usar (incluindo o SOA Suite)
+3 - Criar um novo domínio no Weblogic (foi nomeado de "soa_domain")
+~/Oracle/Middleware/wlserver_10.3/common/bin$ ./config.sh
+
+4 - Iniciar o weblogic a partir do domínio soa_domain
+~/Oracle/Middleware/user_projects/domains/soa_domain$ ./startWebLogic.sh
+
+5 - Iniciar o enterprise manager
+~/Oracle/Middleware/wlserver_10.3/server/bin$ ./startNodeManager.sh
+
+6- Acessar o enterprise manager
+http://localhost:7001/em/
+
+7 - Iniciar o node manager
+./docs/iniciar_node_manager.png
+
+Obs: log do start:
+tail -f /.../Oracle/Middleware/user_projects/domains/soa_domain/servers/soa_server1/logs/soa_server1.out
+
+Obs: Da primeira vez vai dar problema de heap space..
+8 - Parar o nome manager diretamente na linha de comando:
+/.../Oracle/Middleware/user_projects/domains/soa_domain/bin$ ./stopManagedWebLogic.sh soa_server1
+
+9 - Parar o weblogic
+
+10 - Parar o enterprise manager
+
+11 - Ediar o arquivo:
+/home/fsoa42/Oracle/Middleware/wlserver_10.3/common/nodemanager/nodemanager.properties
+mudar de:
+StartScriptEnabled=false
+para:
+StartScriptEnabled=true
+
+12 - Iniciar o weblogic
+
+13 - Iniciar o enterprise manager
+
+14 - Iniciar o node manager
+Na segunda vez vai dar problema de file lock...
+
+15 - Dar um kill no processo do soa_server1 (ps -ef | grep soa_server1)
+
+16 - Iniciar o node manager
+(esperar uns minutos)
+
